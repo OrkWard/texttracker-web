@@ -3,9 +3,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <cstdint>
 #include <string>
+#include <vector>
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+
+#pragma comment(lib, "Ws2_32.lib")
 
 struct InfoForExtension {
   const char *name;
