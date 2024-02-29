@@ -17,27 +17,26 @@ Properties in sentenceInfo:
 --]]
 function send_sentence(server_address, port, sentence)
   socket = require("socket")
-  -- Connect to the server
+
   local tcp = socket.tcp()
   local success, err_msg = tcp:connect(server_address, port)
   if not success then
     error(string.format("Error connecting to server: %s", err_msg))
   end
 
-  -- Send the sentence with a newline character
   local sent_bytes, err_msg = tcp:send(sentence .. "\n")
   if not sent_bytes then
     error(string.format("Error sending data: %s", err_msg))
   end
 
-  -- Close the connection
   tcp:close()
 end
 
 function ProcessSentence(sentence, sentenceInfo)
-  --Your code here...
-  local server_address = "127.0.0.1" -- Replace with the actual server address
-  local port = 8080 -- Replace with the server port
+  local server_address = "127.0.0.1"
+  local port = 8080
 
-  send_sentence(server_address, port, sentence)
+  if 7 == sentenceInfo["text number"] then
+    send_sentence(server_address, port, sentence)
+  end
 end
