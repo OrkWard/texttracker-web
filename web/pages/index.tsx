@@ -1,18 +1,32 @@
 import { Inter } from "next/font/google";
 import useSWR from "swr";
+import type { Middleware } from "swr";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const keepPrevious: Middleware = (useSWRNext) => {
+  return (key, fetcher, config) => {
+    // hook 运行之前...
+
+    // 处理下一个中间件，如果这是最后一个，则处理 `useSWR` hook。
+    const swr = useSWRNext(key, fetcher, config);
+
+    // hook 运行之后...
+    return swr;
+  };
+};
 
 export default function Home() {
   const { data, error, isLoading } = useSWR(
     "http://localhost:8081",
     async (url) => {
       const res = await fetch(url);
-      const sentence = await res.blob();
-      return sentence.text();
+      const sentences: string[] = await res.json();
+      return sentences;
     },
     {
       refreshInterval: 500,
+      use: [keepPrevious],
     }
   );
 
