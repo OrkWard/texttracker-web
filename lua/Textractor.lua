@@ -36,5 +36,6 @@ function ProcessSentence(sentence, sentenceInfo)
   local server_address = "127.0.0.1"
   local port = 8080
 
-  send_sentence(server_address, port, sentence)
+  send_sentence(server_address, port, "[\"" .. sentence .. "\"," .. sentenceInfo["text number"] .. "]")
 end
+
