@@ -1,12 +1,17 @@
 const net = require("net");
 const http = require("http");
 
-let sentence = "";
+let sentences = [];
+let lastId = 0;
 
 const sentenceServer = net.createServer(function (socket) {
   socket.on("data", (data) => {
-    sentence = data.toString();
-    console.log(sentence);
+    const [sentence, id] = JSON.parse(data.toString());
+    if (id <= lastId) sentences = [];
+    lastId = id;
+
+    sentences.push({ id, sentence });
+    console.log(data.toString());
   });
 });
 
@@ -17,7 +22,6 @@ const webServer = http.createServer((req, res) => {
     "Access-Control-Allow-Origin": "*" /* @dev First, read about security */,
     "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
     "Access-Control-Max-Age": 2592000, // 30 days
-    /** add other headers as per requirement */
   };
 
   if (req.method === "OPTIONS") {
@@ -28,7 +32,7 @@ const webServer = http.createServer((req, res) => {
 
   if (["GET", "POST"].indexOf(req.method) > -1) {
     res.writeHead(200, headers);
-    res.end(sentence);
+    res.end(JSON.stringify(sentences));
     return;
   }
 
