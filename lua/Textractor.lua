@@ -36,7 +36,5 @@ function ProcessSentence(sentence, sentenceInfo)
   local server_address = "127.0.0.1"
   local port = 8080
 
-  if 7 == sentenceInfo["text number"] then
-    send_sentence(server_address, port, sentence)
-  end
+  send_sentence(server_address, port, sentence)
 end

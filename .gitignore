@@ -262,3 +262,6 @@ __pycache__/
 
 # CMake output
 **/out/**
+
+!/lua/x64
+!/lua/x86
