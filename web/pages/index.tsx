@@ -3,13 +3,9 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import type { Middleware, SWRResponse } from "swr";
 import { z } from "zod";
+import { Sentences } from "./api/sentences";
 
 const inter = Inter({ subsets: ["latin"] });
-
-type Sentences = {
-  sentence: string;
-  id: number;
-}[];
 
 const keepPrevious: Middleware = (useSWRNext) => {
   return (key, fetcher, config) => {
@@ -33,7 +29,7 @@ const keepPrevious: Middleware = (useSWRNext) => {
 
 export default function Home() {
   const { saved, error } = useSWR(
-    "http://localhost:8081",
+    "/api/sentences",
     async (url) => {
       const res = await fetch(url);
       console.count("fetch");
