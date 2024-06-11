@@ -1,32 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import net from "net";
+import path from "path";
 
 export type Sentences = {
   id: number;
   sentence: string;
 }[];
 
-let sentences: Sentences = [];
+const socketPath = path.join(import.meta.dirname, "server", "ipc.sock");
 
-const sentenceServer = net.createServer(function (socket) {
-  socket.on("data", (data) => {
-    try {
-      const [sentence, id] = JSON.parse(data.toString());
-
-      sentences.push({ id, sentence });
-      console.log(data.toString());
-    } catch (err) {
-      console.error(err);
-    }
-  });
-});
-
-sentenceServer.listen(8080, "127.0.0.1");
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Sentences>
+  res: NextApiResponse<string>
 ) {
-  res.status(200).json(sentences);
-  sentences = [];
+  const ipcClient = net.createConnection(socketPath, () => {
+    console.log("Connect to ipc server");
+  });
+
+  ipcClient.on("data", (data) => {
+    res.status(200).json(data.toString());
+  });
+
+  ipcClient.on("end", () => {
+    console.log("IPC connection ended");
+  });
+
+  ipcClient.on("error", (err) => {
+    console.log(`IPC client error: ${err}`);
+  });
 }
