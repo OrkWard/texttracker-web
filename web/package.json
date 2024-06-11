@@ -7,7 +7,7 @@
     "build": "npm run build:page && npm run build:server",
     "build:page": "next build",
     "build:server": "tsc -p ./server",
-    "start": "concurrently \"npm run start:page\" \"npm run start:server\"",
+    "start": "concurrently -n s: --kill-others npm:start:*",
     "start:page": "next start",
     "start:server": "node ./server/index.mjs",
     "lint": "next lint"
