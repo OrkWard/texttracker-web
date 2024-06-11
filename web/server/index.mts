@@ -26,17 +26,18 @@ const sentenceServer = net.createServer(function (socket) {
 sentenceServer.listen(8080, "127.0.0.1");
 
 const ipcServer = net.createServer(function (socket) {
-  console.log("Socket Connected");
+  // console.log("Socket Connected");
+  // console.log(`Write ${JSON.stringify(sentences)}`);
   socket.write(JSON.stringify(sentences));
   sentences = [];
   socket.end();
 
   socket.on("end", () => {
-    console.log("Connect End");
+    // console.log("Connect End");
   });
 
   socket.on("error", (err) => {
-    console.error("Socket Error: ", err);
+    // console.error("Socket Error: ", err);
   });
 });
 

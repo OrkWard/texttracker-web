@@ -32,7 +32,6 @@ export default function Home() {
     "/api/sentences",
     async (url) => {
       const res = await fetch(url);
-      console.count("fetch");
       const sentences = z
         .array(z.object({ sentence: z.string(), id: z.number() }))
         .parse(await res.json());
@@ -45,6 +44,11 @@ export default function Home() {
   ) as SWRResponse & { saved: string[][] };
 
   const [textNumber, setTextNumber] = useState(1);
+
+  const savedTextLength = saved[textNumber]?.length;
+  useEffect(() => {
+    scrollTo(0, document.body.scrollHeight);
+  }, [savedTextLength]);
 
   return (
     <main
